@@ -17,41 +17,6 @@
    <item>
     <widget class="PlayerControls" name="controls" native="true"/>
    </item>
-   <item>
-    <widget class="QToolButton" name="muteButton">
-     <property name="text">
-      <string>M</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QToolButton" name="nextButton">
-     <property name="text">
-      <string>&gt;&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QToolButton" name="playButton">
-     <property name="text">
-      <string>|&gt;</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QToolButton" name="prevButton">
-     <property name="text">
-      <string>&lt;&lt;</string>
-     </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QSlider" name="horizontalSlider">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>

@@ -10,14 +10,14 @@ PlaylistWidget::PlaylistWidget(QWidget *parent) :
     ui->setupUi(this);
     ui->playlistView->setDragDropMode(QAbstractItemView::DropOnly);
 
-    PlaylistModel* model = new PlaylistModel(this);
-    QMediaPlaylist* playlist = new QMediaPlaylist(this);
-    model->setPlaylist(playlist);
-
-    ui->playlistView->setModel(model);
 }
 
 PlaylistWidget::~PlaylistWidget()
 {
     delete ui;
+}
+
+QAbstractItemView* PlaylistWidget::view()
+{
+    return ui->playlistView;
 }

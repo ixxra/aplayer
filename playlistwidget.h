@@ -7,6 +7,9 @@ namespace Ui {
 class PlaylistWidget;
 }
 
+class QMediaPlaylist;
+class QAbstractItemView;
+
 class PlaylistWidget : public QWidget
 {
     Q_OBJECT
@@ -14,6 +17,9 @@ class PlaylistWidget : public QWidget
 public:
     explicit PlaylistWidget(QWidget *parent = 0);
     ~PlaylistWidget();
+
+    void setPlaylist(QMediaPlaylist* playlist);
+    QAbstractItemView* view();
 
 private:
     Ui::PlaylistWidget *ui;
