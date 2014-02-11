@@ -68,6 +68,7 @@
      <string>Playlist</string>
     </property>
     <addaction name="actionRemove_Playlist_Selection"/>
+    <addaction name="actionClear_Playlist"/>
    </widget>
    <addaction name="menuPlaylist"/>
   </widget>
@@ -81,6 +82,14 @@
    </property>
    <property name="shortcut">
     <string>Del</string>
+   </property>
+  </action>
+  <action name="actionClear_Playlist">
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear the Playlist</string>
    </property>
   </action>
  </widget>

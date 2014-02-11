@@ -32,3 +32,9 @@ void PlaylistWidget::removeSelection()
         model->removeRow(idx->row());
     }
 }
+
+void PlaylistWidget::clear()
+{
+    QAbstractItemModel* model = ui->playlistView->model();
+    model->removeRows(0, model->rowCount());
+}

@@ -45,8 +45,10 @@ bool PlaylistModel::insertRows(int row, int count, const QModelIndex &parent)
 bool PlaylistModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     Q_UNUSED(parent);
-    m_playlist->removeMedia(row, row + count - 1);
-    return true;
+    if (count < 0 || row < 0 || row >= rowCount()){
+        return false;
+    }
+    return m_playlist->removeMedia(row, row + count - 1);
 }
 
 QModelIndex PlaylistModel::index(int row, int column, const QModelIndex &parent) const

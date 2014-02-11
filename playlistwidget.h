@@ -21,6 +21,7 @@ public:
 
 public slots:
     void removeSelection();
+    void clear();
 
 private:
     Ui::PlaylistWidget *ui;
