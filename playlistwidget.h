@@ -7,7 +7,6 @@ namespace Ui {
 class PlaylistWidget;
 }
 
-class QMediaPlaylist;
 class QAbstractItemView;
 
 class PlaylistWidget : public QWidget
@@ -18,8 +17,10 @@ public:
     explicit PlaylistWidget(QWidget *parent = 0);
     ~PlaylistWidget();
 
-    void setPlaylist(QMediaPlaylist* playlist);
     QAbstractItemView* view();
+
+public slots:
+    void removeSelection();
 
 private:
     Ui::PlaylistWidget *ui;

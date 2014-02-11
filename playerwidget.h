@@ -55,6 +55,7 @@ class QVideoProbe;
 class QVideoWidget;
 
 class PlaylistModel;
+class PlaylistWidget;
 class QAbstractItemView;
 
 namespace Ui {
@@ -68,6 +69,9 @@ class PlayerWidget : public QWidget
 public:
     explicit PlayerWidget(QWidget *parent = 0);
     ~PlayerWidget();
+
+    PlaylistWidget* playlist();
+    PlaylistWidget* playlistWidget;
 
 private:
     Ui::PlayerWidget *ui;
@@ -97,7 +101,7 @@ private:
     void updateDurationInfo(qint64 currentInfo);
 
     QMediaPlayer *player;
-    QMediaPlaylist *playlist;
+    QMediaPlaylist *m_playlist;
     QLabel *coverLabel;
     QSlider *slider;
     QLabel *labelDuration;

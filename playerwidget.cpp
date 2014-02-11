@@ -64,26 +64,26 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
 
     player = new QMediaPlayer(this);
     // owned by PlaylistModel
-    playlist = new QMediaPlaylist();
-    player->setPlaylist(playlist);
+    m_playlist = new QMediaPlaylist();
+    player->setPlaylist(m_playlist);
 
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
     connect(player, SIGNAL(positionChanged(qint64)), SLOT(positionChanged(qint64)));
     connect(player, SIGNAL(metaDataChanged()), SLOT(metaDataChanged()));
-    connect(playlist, SIGNAL(currentIndexChanged(int)), SLOT(playlistPositionChanged(int)));
+    connect(m_playlist, SIGNAL(currentIndexChanged(int)), SLOT(playlistPositionChanged(int)));
     connect(player, SIGNAL(mediaStatusChanged(QMediaPlayer::MediaStatus)),
             this, SLOT(statusChanged(QMediaPlayer::MediaStatus)));
     connect(player, SIGNAL(bufferStatusChanged(int)), this, SLOT(bufferingProgress(int)));
     connect(player, SIGNAL(error(QMediaPlayer::Error)), this, SLOT(displayErrorMessage()));
 
     playlistModel = new PlaylistModel(this);
-    playlistModel->setPlaylist(playlist);
+    playlistModel->setPlaylist(m_playlist);
 
-    PlaylistWidget* playlistWidget = new PlaylistWidget(this);
+    playlistWidget = new PlaylistWidget(this);
     playlistView = playlistWidget->view();
 
     playlistView->setModel(playlistModel);
-    playlistView->setCurrentIndex(playlistModel->index(playlist->currentIndex(), 0));
+    playlistView->setCurrentIndex(playlistModel->index(m_playlist->currentIndex(), 0));
 
 
 
@@ -108,7 +108,7 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
     connect(controls, SIGNAL(play()), player, SLOT(play()));
     connect(controls, SIGNAL(pause()), player, SLOT(pause()));
     connect(controls, SIGNAL(stop()), player, SLOT(stop()));
-    connect(controls, SIGNAL(next()), playlist, SLOT(next()));
+    connect(controls, SIGNAL(next()), m_playlist, SLOT(next()));
     connect(controls, SIGNAL(previous()), this, SLOT(previousClicked()));
     connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
     connect(controls, SIGNAL(changeMuting(bool)), player, SLOT(setMuted(bool)));
@@ -127,7 +127,6 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
     controlLayout->addWidget(controls);
     controlLayout->addStretch(1);
 
-qDebug() << "Started";
     QBoxLayout *layout = new QVBoxLayout;
     QHBoxLayout *hLayout = new QHBoxLayout;
     hLayout->addWidget(slider);
@@ -177,16 +176,21 @@ void PlayerWidget::addToPlaylist(const QStringList& fileNames)
         if (fileInfo.exists()) {
             QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
             if (fileInfo.suffix().toLower() == QLatin1String("m3u")) {
-                playlist->load(url);
+                m_playlist->load(url);
             } else
-                playlist->addMedia(url);
+                m_playlist->addMedia(url);
         } else {
             QUrl url(argument);
             if (url.isValid()) {
-                playlist->addMedia(url);
+                m_playlist->addMedia(url);
             }
         }
     }
+}
+
+PlaylistWidget* PlayerWidget::playlist()
+{
+    return playlistWidget;
 }
 
 void PlayerWidget::durationChanged(qint64 duration)
@@ -225,7 +229,7 @@ void PlayerWidget::previousClicked()
     // Go to previous track if we are within the first 5 seconds of playback
     // Otherwise, seek to the beginning.
     if(player->position() <= 5000)
-        playlist->previous();
+        m_playlist->previous();
     else
         player->setPosition(0);
 }
@@ -233,7 +237,7 @@ void PlayerWidget::previousClicked()
 void PlayerWidget::jump(const QModelIndex &index)
 {
     if (index.isValid()) {
-        playlist->setCurrentIndex(index.row());
+        m_playlist->setCurrentIndex(index.row());
         player->play();
     }
 }

@@ -17,6 +17,7 @@ public:
     int columnCount(const QModelIndex &parent = QModelIndex()) const;
 
     bool insertRows(int row, int count, const QModelIndex &parent);
+    bool removeRows(int row, int count, const QModelIndex &parent);
 
     QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     QModelIndex parent(const QModelIndex &child) const;

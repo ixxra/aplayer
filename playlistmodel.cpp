@@ -16,13 +16,11 @@ PlaylistModel::PlaylistModel(QObject *parent) :
 
 int PlaylistModel::rowCount(const QModelIndex &parent) const
 {
-    qDebug() << "rowcount";
     return m_playlist && !parent.isValid() ? m_playlist->mediaCount() : 0;
 }
 
 int PlaylistModel::columnCount(const QModelIndex &parent) const
 {
-    qDebug() << "columncount";
     return !parent.isValid() ? 1 : 0;
 }
 
@@ -41,6 +39,13 @@ bool PlaylistModel::insertRows(int row, int count, const QModelIndex &parent)
     }
     endInsertRows();
 
+    return true;
+}
+
+bool PlaylistModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    Q_UNUSED(parent);
+    m_playlist->removeMedia(row, row + count - 1);
     return true;
 }
 
@@ -76,13 +81,11 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 
 QMediaPlaylist *PlaylistModel::playlist() const
 {
-    qDebug() << "playlist";
     return m_playlist;
 }
 
 void PlaylistModel::setPlaylist(QMediaPlaylist *playlist)
 {
-    qDebug() << "setplaylist";
     if (m_playlist) {
             disconnect(m_playlist, SIGNAL(mediaAboutToBeInserted(int,int)), this, SLOT(beginInsertItems(int,int)));
             disconnect(m_playlist, SIGNAL(mediaInserted(int,int)), this, SLOT(endInsertItems()));
@@ -210,7 +213,7 @@ bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags defaultFlags = QAbstractItemModel::flags(index);
+    Qt::ItemFlags defaultFlags = Qt::ItemNeverHasChildren | QAbstractItemModel::flags(index);
 
 
     if (index.isValid())
