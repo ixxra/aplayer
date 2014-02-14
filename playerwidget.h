@@ -62,6 +62,9 @@ namespace Ui {
 class PlayerWidget;
 }
 
+class QMediaPlayer;
+
+
 class PlayerWidget : public QWidget
 {
     Q_OBJECT
@@ -72,6 +75,8 @@ public:
 
     PlaylistWidget* playlist();
     PlaylistWidget* playlistWidget;
+
+    QMediaPlayer* inner_player();
 
 private:
     Ui::PlayerWidget *ui;
@@ -100,7 +105,7 @@ private:
     void handleCursor(QMediaPlayer::MediaStatus status);
     void updateDurationInfo(qint64 currentInfo);
 
-    QMediaPlayer *player;
+    QMediaPlayer* player;
     QMediaPlaylist *m_playlist;
     QLabel *coverLabel;
     QSlider *slider;

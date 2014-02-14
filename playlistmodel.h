@@ -50,10 +50,12 @@ private slots:
     void beginRemoveItems(int start, int end);
     void endRemoveItems();
     void changeItems(int start, int end);
+    void on_current_changed(int current);
 
 private:
     QMediaPlaylist* m_playlist;
     QMap<QModelIndex, QVariant> m_data;
+    int m_current;
 };
 
 #endif // PLAYLISTMODEL_H

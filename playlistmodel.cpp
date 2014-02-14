@@ -4,12 +4,13 @@
 #include <QDebug>
 #include <QMimeDatabase>
 #include <QMimeData>
-#include <QDragEnterEvent>
 #include <QFileInfo>
+#include <QApplication>
+#include <QStyle>
 
 
 PlaylistModel::PlaylistModel(QObject *parent) :
-    QAbstractItemModel(parent), m_playlist(0)
+    QAbstractItemModel(parent), m_playlist(0), m_current(-1)
 {
 }
 
@@ -77,6 +78,9 @@ QVariant PlaylistModel::data(const QModelIndex &index, int role) const
         }
 
         return value;
+
+    } else if (index.isValid() && role == Qt::DecorationRole && index.row() == m_playlist->currentIndex()) {
+        return QApplication::style()->standardIcon(QStyle::SP_MediaVolume);
     }
     return QVariant();
 }
@@ -94,6 +98,7 @@ void PlaylistModel::setPlaylist(QMediaPlaylist *playlist)
             disconnect(m_playlist, SIGNAL(mediaAboutToBeRemoved(int,int)), this, SLOT(beginRemoveItems(int,int)));
             disconnect(m_playlist, SIGNAL(mediaRemoved(int,int)), this, SLOT(endRemoveItems()));
             disconnect(m_playlist, SIGNAL(mediaChanged(int,int)), this, SLOT(changeItems(int,int)));
+            disconnect(m_playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(on_current_changed(int)));
     }
 
     beginResetModel();
@@ -105,6 +110,7 @@ void PlaylistModel::setPlaylist(QMediaPlaylist *playlist)
             connect(m_playlist, SIGNAL(mediaAboutToBeRemoved(int,int)), this, SLOT(beginRemoveItems(int,int)));
             connect(m_playlist, SIGNAL(mediaRemoved(int,int)), this, SLOT(endRemoveItems()));
             connect(m_playlist, SIGNAL(mediaChanged(int,int)), this, SLOT(changeItems(int,int)));
+            connect(m_playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(on_current_changed(int)));
     }
 
     endResetModel();
@@ -153,6 +159,15 @@ void PlaylistModel::changeItems(int start, int end)
     emit dataChanged(index(start, 0), index(end, 0));
 }
 
+void PlaylistModel::on_current_changed(int current)
+{
+    if (m_current != -1) {
+        emit dataChanged(index(m_current, 0), index(m_current, 0), QVector<int>(Qt::DecorationRole));
+    }
+
+    m_current = current;
+    emit dataChanged(index(m_current, 0), index(m_current, 0), QVector<int>(Qt::DecorationRole));
+}
 
 /************************* Drag and Drop *******************************/
 
@@ -205,10 +220,11 @@ bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
         }
     }
 
-    qDebug() << "Inserting media at position" << row;
-
-    m_playlist->insertMedia(row + 1, media);
-
+    if (row == -1) {
+        m_playlist->addMedia(media);
+    } else {
+        m_playlist->insertMedia(row + 1, media);
+    }
 
     return true;
 }

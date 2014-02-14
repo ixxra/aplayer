@@ -20,6 +20,9 @@ public:
 private:
     Ui::MainWindow *ui;
 
+private slots:
+    void metadataChanged(const QString& key, const QVariant& value);
+
 };
 
 #endif // MAINWINDOW_H

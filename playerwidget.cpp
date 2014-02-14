@@ -112,7 +112,7 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
     connect(controls, SIGNAL(previous()), this, SLOT(previousClicked()));
     connect(controls, SIGNAL(changeVolume(int)), player, SLOT(setVolume(int)));
     connect(controls, SIGNAL(changeMuting(bool)), player, SLOT(setMuted(bool)));
-    connect(controls, SIGNAL(changeRate(qreal)), player, SLOT(setPlaybackRate(qreal)));
+    //connect(controls, SIGNAL(changeRate(qreal)), player, SLOT(setPlaybackRate(qreal)));
 
     connect(player, SIGNAL(stateChanged(QMediaPlayer::State)),
             controls, SLOT(setState(QMediaPlayer::State)));
@@ -161,6 +161,11 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
 PlayerWidget::~PlayerWidget()
 {
     delete ui;
+}
+
+QMediaPlayer* PlayerWidget::inner_player()
+{
+    return player;
 }
 
 void PlayerWidget::open()
