@@ -31,3 +31,6 @@ FORMS    += mainwindow.ui \
     filemanagerwidget.ui \
     playlistwidget.ui \
     playerwidget.ui
+
+
+LIBS += -ltag

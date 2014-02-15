@@ -53,6 +53,9 @@
 
 #include <QDebug>
 
+#include <taglib/fileref.h>
+
+
 
 PlayerWidget::PlayerWidget(QWidget *parent) :
     QWidget(parent),
@@ -65,6 +68,9 @@ PlayerWidget::PlayerWidget(QWidget *parent) :
     player = new QMediaPlayer(this);
     // owned by PlaylistModel
     m_playlist = new QMediaPlaylist();
+
+    connect(m_playlist, SIGNAL(mediaInserted(int,int)), SLOT(updateMetadata(int,int)));
+
     player->setPlaylist(m_playlist);
 
     connect(player, SIGNAL(durationChanged(qint64)), SLOT(durationChanged(qint64)));
@@ -337,6 +343,21 @@ void PlayerWidget::updateDurationInfo(qint64 currentInfo)
         tStr = currentTime.toString(format) + " / " + totalTime.toString(format);
     }
     labelDuration->setText(tStr);
+}
+
+void PlayerWidget::updateMetadata(int start, int end)
+{
+    for (int i = start; i <= end; i++){
+        QUrl u = m_playlist->media(i).canonicalUrl();
+        if (u.isLocalFile()){
+            TagLib::FileRef f = TagLib::FileRef(u.toLocalFile().toLocal8Bit().data());
+            QString d(f.tag()->title().toCString());
+            QModelIndex idx = playlistModel->index(i, 0);
+            if (!d.isEmpty())
+                playlistModel->setData(idx, d);
+
+        }
+    }
 }
 
 

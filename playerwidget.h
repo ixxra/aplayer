@@ -98,6 +98,7 @@ private slots:
     void displayErrorMessage();
 
     void addToPlaylist(const QStringList &fileNames);
+    void updateMetadata(int start, int end);
 
 private:
     void setTrackInfo(const QString &info);
@@ -116,7 +117,7 @@ private:
     QAbstractItemView* playlistView;
     QString trackInfo;
     QString statusInfo;
-    qint64 duration;
+    qint64 duration;    
 };
 
 #endif // PLAYERWIDGET_H
